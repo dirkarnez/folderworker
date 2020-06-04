@@ -2,8 +2,11 @@ package folderworker
 
 import (
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/fsnotify/fsnotify"
 )
@@ -24,6 +27,8 @@ func Start() {
 		}
 		root = workingDir
 	}
+
+	readDir()
 
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
@@ -57,4 +62,26 @@ func Start() {
 		log.Fatal(err)
 	}
 	<-done
+}
+
+func readDir() error {
+	files, err := ioutil.ReadDir(root)
+	if err != nil {
+		return err
+	}
+
+	for _, f := range files {
+		name := f.Name()
+		if f.IsDir() || filepath.Ext(name) != ".url" {
+			continue
+		}
+		content, err := ioutil.ReadFile(name)
+		if err != nil {
+			continue
+		}
+
+		fmt.Println(string(content))
+	}
+
+	return nil
 }
