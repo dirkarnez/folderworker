@@ -28,7 +28,10 @@ func Start() {
 		root = workingDir
 	}
 
-	readDir()
+	err := readDir()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
