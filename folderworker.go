@@ -69,11 +69,13 @@ func Start() {
 
 func readDir() error {
 	files, err := ioutil.ReadDir(root)
+	fmt.Println("AAAA")
 	if err != nil {
 		return err
 	}
 
 	for _, f := range files {
+		fmt.Println("BBB")
 		name := f.Name()
 		if f.IsDir() || filepath.Ext(name) != ".url" {
 			continue
